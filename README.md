@@ -1,3 +1,32 @@
+# AppliQ
+
+This project consists of a React + TypeScript frontend application.
+
+## Stack
+
+- React+Typescript frontend with `yarn` as package manager.
+
+## Quickstart
+
+1. Install dependencies:
+
+```bash
+make
+```
+
+2. Start the backend and frontend servers in separate terminals:
+
+```bash
+make run-frontend
+```
+
+## Gotchas
+
+the frontend development server runs on port 5173.
+
+Visit <http://localhost:5173> to view the application.
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
