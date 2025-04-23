@@ -61,11 +61,6 @@ export class HttpClient<SecurityDataType = unknown> {
   constructor(apiConfig: ApiConfig<SecurityDataType> = {}) {
     Object.assign(this, apiConfig);
   }
-
-  public setSecurityData = (data: SecurityDataType | null) => {
-    this.securityData = data;
-  };
-
   protected encodeQueryParam(key: string, value: any) {
     const encodedKey = encodeURIComponent(key);
     return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
@@ -87,12 +82,6 @@ export class HttpClient<SecurityDataType = unknown> {
       .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
       .join("&");
   }
-
-  protected addQueryParams(rawQuery?: QueryParamsType): string {
-    const queryString = this.toQueryString(rawQuery);
-    return queryString ? `?${queryString}` : "";
-  }
-
   private contentFormatters: Record<ContentType, (input: any) => any> = {
     [ContentType.Json]: (input: any) =>
       input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
@@ -151,14 +140,6 @@ export class HttpClient<SecurityDataType = unknown> {
     return abortController.signal;
   };
 
-  public abortRequest = (cancelToken: CancelToken) => {
-    const abortController = this.abortControllers.get(cancelToken);
-
-    if (abortController) {
-      abortController.abort();
-      this.abortControllers.delete(cancelToken);
-    }
-  };
 
   public request = async <T = any, E = any>({
     body,
@@ -218,79 +199,4 @@ export class HttpClient<SecurityDataType = unknown> {
       return data;
     });
   };
-
-  public async *requestStream<T = any, E = any>({
-    body,
-    secure,
-    path,
-    type,
-    query,
-    format,
-    baseUrl,
-    cancelToken,
-    ...params
-  }: FullRequestParams): AsyncIterable<T> {
-    const secureParams =
-      ((typeof secure === "boolean" ? secure : this.baseApiParams.secure) &&
-        this.securityWorker &&
-        (await this.securityWorker(this.securityData))) ||
-      {};
-    const requestParams = this.mergeRequestParams(params, secureParams);
-    const queryString = query && this.toQueryString(query);
-    const payloadFormatter = this.contentFormatters[type || ContentType.Json];
-
-    let response;
-    try {
-      response = await this.customFetch(
-        `${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`,
-        {
-          ...requestParams,
-          headers: {
-            ...(requestParams.headers || {}),
-            ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
-          },
-          signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null,
-          body: typeof body === "undefined" || body === null ? null : payloadFormatter(body),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("Response not OK");
-      }
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      const contentType = response.headers.get("Content-Type");
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        let chunk = decoder.decode(value, { stream: true });
-
-        let data;
-        if (contentType === "application/json") {
-          let chunk = decoder.decode(value, { stream: true });
-          try {
-            data = JSON.parse(chunk);
-          } catch (error) {
-            throw new Error(error);
-            continue;
-          }
-        } else if (contentType === "application/octet-stream") {
-          data = new Uint8Array(value);
-        } else {
-          let chunk = decoder.decode(value, { stream: true });
-          data = chunk;
-        }
-
-        yield data as T;
-      }
-    } catch (error) {
-      throw new Error(error);
-    } finally {
-      if (cancelToken) {
-        this.abortControllers.delete(cancelToken);
-      }
-    }
-  }
 }
