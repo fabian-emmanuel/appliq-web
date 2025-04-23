@@ -65,9 +65,6 @@
     "src"
   ],
   "exclude": [
-    "src/brain/Brain.ts",
-    "src/brain/BrainRoute.ts",
-    "src/brain/data-contracts.ts",
     "src/brain/http-client.ts"
   ],
   "references": [
