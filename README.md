@@ -28,3 +28,12 @@ Visit <http://localhost:5173> to view the application.
 
 
 # React + TypeScript + Vite
+
+
+ Docker
+
+### Build and run with Docker
+
+The application will be available at http://localhost:8080.
+
+### Using Docker Compose
