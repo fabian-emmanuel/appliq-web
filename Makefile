@@ -1,11 +1,8 @@
-install-frontend:
-	chmod +x frontend/install.sh
-	chmod +x frontend/run.sh
-	cd frontend && ./install.sh
 
-install: install-frontend
+install:
+	yarn install
 
-run-frontend:
-	cd frontend && ./run.sh
+run:
+	yarn dev
 
 .DEFAULT_GOAL := install
