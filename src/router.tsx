@@ -5,14 +5,12 @@ import { userRoutes } from "./user-routes";
 import {SuspenseWrapper} from "components/SuspenseWrapper.tsx";
 
 
-
-
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const SomethingWentWrongPage = lazy(
     () => import("./pages/SomethingWentWrongPage"),
 );
 
-export const router = createBrowserRouter(
+const router = createBrowserRouter(
     [
         ...userRoutes,
         {
@@ -30,3 +28,5 @@ export const router = createBrowserRouter(
         },
     ]
 );
+
+export default router;

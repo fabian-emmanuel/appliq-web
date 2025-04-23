@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,9 +10,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input"; // Import Input
-import { Label } from "@/components/ui/label"; // Import Label
-import { Status } from "./ApplicationCard"; // Assuming Status type is exported
+import { Label } from "@/components/ui/label";
+import {Status} from "@/types/Applications.ts"; // Import Label
 
 interface Props {
   isOpen: boolean;
