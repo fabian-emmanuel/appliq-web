@@ -56,14 +56,14 @@ const LoginPage = () => {
     return (
         <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900">
             {/* Left side with background and branding */}
-            <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-r from-blue-500 to-indigo-600 flex-col justify-center items-center p-12 text-white">
+            <div className="hidden lg:flex lg:w-1/2 bg-linear-to-r from-blue-500 to-indigo-600 flex-col justify-center items-center p-12 text-white">
                 <div className="max-w-md">
                     <Logo size="lg" className="mb-8" />
                     <h1 className="text-4xl font-bold mb-6">Welcome back!</h1>
                     <p className="text-lg opacity-90 mb-8">
                         Log in to access your AppliQ dashboard and continue tracking your job applications.
                     </p>
-                    <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
+                    <div className="bg-white/10 p-6 rounded-lg backdrop-blur-xs">
                         <p className="italic text-sm mb-4">"AppliQ has helped me organize my job applications and help manage interviews for my dream companies."</p>
                         <div className="flex items-center">
                             <div className="w-10 h-10 rounded-full bg-white/20 mr-3"></div>
