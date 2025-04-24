@@ -318,7 +318,7 @@ const SignUpPage = () => {
             </div>
 
             {/* Right side with background and content */}
-            <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-r from-indigo-600 to-blue-500 flex-col justify-center items-center p-12 text-white">
+            <div className="hidden lg:flex lg:w-1/2 bg-linear-to-r from-indigo-600 to-blue-500 flex-col justify-center items-center p-12 text-white">
                 <div className="max-w-md">
                     <Logo size="lg" className="mb-8" />
                     <h1 className="text-4xl font-bold mb-6">Start your career journey</h1>
@@ -327,7 +327,7 @@ const SignUpPage = () => {
                     </p>
 
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                        <div className="bg-white/10 p-4 rounded-lg backdrop-blur-xs">
                             <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-3">
                                 <Check className="w-6 h-6" />
                             </div>
@@ -335,7 +335,7 @@ const SignUpPage = () => {
                             <p className="text-sm opacity-80">Keep all your applications organized in one place</p>
                         </div>
 
-                        <div className="bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                        <div className="bg-white/10 p-4 rounded-lg backdrop-blur-xs">
                             <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-3">
                                 <Check className="w-6 h-6" />
                             </div>
@@ -343,7 +343,7 @@ const SignUpPage = () => {
                             <p className="text-sm opacity-80">Practice with industry-specific questions</p>
                         </div>
 
-                        <div className="bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                        <div className="bg-white/10 p-4 rounded-lg backdrop-blur-xs">
                             <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-3">
                                 <Check className="w-6 h-6" />
                             </div>
@@ -351,7 +351,7 @@ const SignUpPage = () => {
                             <p className="text-sm opacity-80">Get personalized recommendations</p>
                         </div>
 
-                        <div className="bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                        <div className="bg-white/10 p-4 rounded-lg backdrop-blur-xs">
                             <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-3">
                                 <Check className="w-6 h-6" />
                             </div>

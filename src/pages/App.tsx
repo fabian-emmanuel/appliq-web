@@ -55,7 +55,7 @@ export default function App() {
               </div>
             </div>
             <div className="md:w-1/2">
-              <div className="aspect-video rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-border shadow-xl flex items-center justify-center p-8">
+              <div className="aspect-video rounded-lg bg-linear-to-br from-primary/10 to-primary/5 border border-border shadow-xl flex items-center justify-center p-8">
                 <Logo size="xl" />
               </div>
             </div>
