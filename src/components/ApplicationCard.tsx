@@ -28,7 +28,7 @@ export function ApplicationCard({application, onRequestStatusChange, onEdit, onD
 
     return (
         <Card
-            className={`h-full flex flex-col transition-all duration-200 ${isHovered ? 'shadow-md transform scale-[1.005]' : 'shadow'} overflow-hidden`}
+            className={`h-full flex flex-col transition-all duration-200 ${isHovered ? 'shadow-md transform scale-[1.005]' : 'shadow-sm'} overflow-hidden`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
@@ -52,7 +52,7 @@ export function ApplicationCard({application, onRequestStatusChange, onEdit, onD
                 <div className="flex items-start gap-3">
                     {/* Company Avatar */}
                     <div
-                        className={`flex-shrink-0 h-10 w-10 rounded-md ring-1 ring-gray-200 flex items-center justify-center text-sm font-bold ${getCompanyColor(application.company)}`}>
+                        className={`shrink-0 h-10 w-10 rounded-md ring-1 ring-gray-200 flex items-center justify-center text-sm font-bold ${getCompanyColor(application.company)}`}>
                         {getCompanyInitials(application.company)}
                     </div>
 
@@ -81,7 +81,7 @@ export function ApplicationCard({application, onRequestStatusChange, onEdit, onD
                 </div>
             </CardHeader>
 
-            <CardContent className="p-4 flex-grow flex flex-col">
+            <CardContent className="p-4 grow flex flex-col">
                 {/* Progress Indicator */}
                 <div className="mb-4">
                     <div className="flex justify-between text-xs mb-1">
