@@ -239,23 +239,26 @@ export default function ApplicationsPage() {
         </div>
 
         {/* --- Applications Grid View --- */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {paginatedApplications.length > 0 ? (
-            paginatedApplications.map((app) => (
-              <ApplicationCard 
-                key={app.id}
-                application={app}
-                onRequestStatusChange={handleOpenStatusUpdate} // Pass the modal opener
-                onEdit={handleEditApplication}
-                onDelete={handleDeleteApplication}
-              />
-            ))
-          ) : (
-            <div className="col-span-full h-32 flex items-center justify-center rounded-md border border-dashed">
-              <p className="text-muted-foreground">No applications found matching your filters.</p>
-            </div>
-          )}
-        </div>
+        <div className="max-h-[70vh] overflow-y-auto" style={{scrollbarWidth:"none"}}>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {paginatedApplications.length > 0 ? (
+      paginatedApplications.map((app) => (
+        <ApplicationCard 
+          key={app.id}
+          application={app}
+          onRequestStatusChange={handleOpenStatusUpdate}
+          onEdit={handleEditApplication}
+          onDelete={handleDeleteApplication}
+        />
+      ))
+    ) : (
+      <div className="col-span-full h-32 flex items-center justify-center rounded-md border border-dashed">
+        <p className="text-muted-foreground">No applications found matching your filters.</p>
+      </div>
+    )}
+  </div>
+</div>
+
 
         {/* --- Pagination Controls --- */}
         {totalPages > 1 && (
