@@ -1,5 +1,5 @@
 // src/user-routes.tsx
-import { SuspenseWrapper } from "components/SuspenseWrapper.tsx";
+import {LoadingSpinner, SuspenseWrapper} from "components/SuspenseWrapper.tsx";
 import { lazy } from "react";
 import { RouteObject } from "react-router";
 
@@ -38,4 +38,8 @@ export const userRoutes: RouteObject[] = [
 		path: "/signup-page",
 		element: <SuspenseWrapper><SignUpPage /></SuspenseWrapper>
 	},
+	{
+		path: "/spinner",
+		element: <LoadingSpinner/> //added for testing purposes
+	}
 ];

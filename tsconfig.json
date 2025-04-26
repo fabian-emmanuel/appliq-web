@@ -34,6 +34,12 @@
       "pages/*": [
         "./src/pages/*"
       ],
+      "types/*": [
+        "./src/types/*"
+      ],
+      "errors/*": [
+        "./src/errors/*"
+      ],
       "app": [
         "./src/app"
       ],
@@ -57,6 +63,12 @@
       ],
       "@/pages/*": [
         "./src/pages/*"
+      ],
+      "@/types/*": [
+        "./src/types/*"
+      ],
+      "@/errors/*": [
+        "./src/errors/*"
       ]
     }
   },
@@ -64,9 +76,7 @@
     "env.d.ts",
     "src"
   ],
-  "exclude": [
-    "src/brain/http-client.ts"
-  ],
+  "exclude": [],
   "references": [
     {
       "path": "./tsconfig.node.json"

@@ -1,6 +1,6 @@
-// Get company initials for the avatar
-export const getCompanyInitials = (company: string) => {
-    return company
+// Get initials for the avatar
+export const getInitials = (name: string) => {
+    return name
         .split(' ')
         .map(word => word[0])
         .join('')
@@ -9,9 +9,9 @@ export const getCompanyInitials = (company: string) => {
 };
 
 
-// Calculate background color for company avatar
+// Calculate background color for the avatar
 // This is a simple hash function to generate consistent colors
-export const getCompanyColor = (company: string) => {
+export const getColor = (name: string) => {
         const colors = [
             'bg-blue-100 text-blue-800',
             'bg-green-100 text-green-800',
@@ -22,8 +22,8 @@ export const getCompanyColor = (company: string) => {
         ];
 
         let hash = 0;
-        for (let i = 0; i < company.length; i++) {
-            hash = company.charCodeAt(i) + ((hash << 5) - hash);
+        for (let i = 0; i < name.length; i++) {
+            hash = name.charCodeAt(i) + ((hash << 5) - hash);
         }
 
         hash = Math.abs(hash) % colors.length;
