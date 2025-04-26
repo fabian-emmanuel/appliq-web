@@ -1,5 +1,5 @@
 // src/router.tsx
-import { lazy, Suspense } from "react";
+import { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import { userRoutes } from "./user-routes";
 import {SuspenseWrapper} from "components/SuspenseWrapper.tsx";

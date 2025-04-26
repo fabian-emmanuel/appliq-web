@@ -1,202 +1,156 @@
-export type QueryParamsType = Record<string | number, any>;
-export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
+import {
+    FullRequestParams,
+    QueryParamsType,
+    ResponseFormat,
+    ContentType,
+    RequestParams,
+    ApiConfig,
+    HttpResponse
+} from '@/types/http-client';
+import {errorMessages, HttpError, NetworkError} from '@/errors/http-client-errors';
 
-export interface FullRequestParams extends Omit<RequestInit, "body"> {
-  /** set parameter to `true` for call `securityWorker` for this request */
-  secure?: boolean;
-  /** request path */
-  path: string;
-  /** content type of request body */
-  type?: ContentType;
-  /** query params */
-  query?: QueryParamsType;
-  /** format of response (i.e. response.json() -> format: "json") */
-  format?: ResponseFormat;
-  /** request body */
-  body?: unknown;
-  /** base url */
-  baseUrl?: string;
-  /** request cancellation token */
-  cancelToken?: CancelToken;
-}
+export class HttpClient<SecData = unknown> {
+    private readonly baseUrl: string;
+    private readonly securityWorker?: ApiConfig<SecData>['securityWorker'];
+    private securityData: SecData | null = null;
+    private readonly fetchFn: typeof fetch;
+    private abortControllers = new Map<symbol | string | number, AbortController>();
 
-export type RequestParams = Omit<FullRequestParams, "body" | "method" | "query" | "path">;
-
-export interface ApiConfig<SecurityDataType = unknown> {
-  baseUrl?: string;
-  baseApiParams?: Omit<RequestParams, "baseUrl" | "cancelToken" | "signal">;
-  securityWorker?: (securityData: SecurityDataType | null) => Promise<RequestParams | void> | RequestParams | void;
-  customFetch?: typeof fetch;
-}
-
-export interface HttpResponse<D extends unknown, E extends unknown = unknown> extends Response {
-  data: D;
-  error: E;
-  json: () => Promise<D>;
-}
-
-type CancelToken = Symbol | string | number;
-
-export enum ContentType {
-  Json = "application/json",
-  FormData = "multipart/form-data",
-  UrlEncoded = "application/x-www-form-urlencoded",
-  Text = "text/plain",
-}
-
-export class HttpClient<SecurityDataType = unknown> {
-  public baseUrl: string = "";
-  private securityData: SecurityDataType | null = null;
-  private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
-  private abortControllers = new Map<CancelToken, AbortController>();
-  private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
-
-  private baseApiParams: RequestParams = {
-    credentials: "same-origin",
-    headers: {},
-    redirect: "follow",
-    referrerPolicy: "no-referrer",
-  };
-
-  constructor(apiConfig: ApiConfig<SecurityDataType> = {}) {
-    Object.assign(this, apiConfig);
-  }
-  protected encodeQueryParam(key: string, value: any) {
-    const encodedKey = encodeURIComponent(key);
-    return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
-  }
-
-  protected addQueryParam(query: QueryParamsType, key: string) {
-    return this.encodeQueryParam(key, query[key]);
-  }
-
-  protected addArrayQueryParam(query: QueryParamsType, key: string) {
-    const value = query[key];
-    return value.map((v: any) => this.encodeQueryParam(key, v)).join("&");
-  }
-
-  protected toQueryString(rawQuery?: QueryParamsType): string {
-    const query = rawQuery || {};
-    const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
-    return keys
-      .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
-      .join("&");
-  }
-  private contentFormatters: Record<ContentType, (input: any) => any> = {
-    [ContentType.Json]: (input: any) =>
-      input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
-    [ContentType.Text]: (input: any) => (input !== null && typeof input !== "string" ? JSON.stringify(input) : input),
-    [ContentType.FormData]: (input: any) =>
-      Object.keys(input || {}).reduce((formData, key) => {
-        const property = input[key];
-
-        if (Array.isArray(property)) {
-          for (const it of property) {
-            formData.append(
-              key,
-              it instanceof Blob ? it : typeof it === "object" && it !== null ? JSON.stringify(it) : `${it}`,
-            );
-          }
-        } else {
-          formData.append(
-            key,
-            property instanceof Blob
-              ? property
-              : typeof property === "object" && property !== null
-              ? JSON.stringify(property)
-              : `${property}`,
-          );
-        }
-
-        return formData;
-      }, new FormData()),
-    [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
-  };
-
-  protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
-    return {
-      ...this.baseApiParams,
-      ...params1,
-      ...(params2 || {}),
-      headers: {
-        ...(this.baseApiParams.headers || {}),
-        ...(params1.headers || {}),
-        ...((params2 && params2.headers) || {}),
-      },
+    private readonly defaultParams: RequestParams = {
+        credentials: 'same-origin',
+        headers: {},
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
     };
-  }
 
-  protected createAbortSignal = (cancelToken: CancelToken): AbortSignal | undefined => {
-    if (this.abortControllers.has(cancelToken)) {
-      const abortController = this.abortControllers.get(cancelToken);
-      if (abortController) {
-        return abortController.signal;
-      }
-      return void 0;
+    constructor(config: ApiConfig<SecData> = {}) {
+        this.baseUrl = config.baseUrl ?? '';
+        this.securityWorker = config.securityWorker;
+        this.fetchFn = config.customFetch ?? globalThis.fetch.bind(globalThis);
+        if (config.baseApiParams) {
+            this.defaultParams = { ...this.defaultParams, ...config.baseApiParams };
+        }
     }
 
-    const abortController = new AbortController();
-    this.abortControllers.set(cancelToken, abortController);
-    return abortController.signal;
-  };
+    setSecurityData(data: SecData | null) {
+        this.securityData = data;
+    }
 
+    // Build ?a=1&b=2 array-friendly
+    private buildQuery(q?: QueryParamsType): string {
+        if (!q) return '';
+        const p = new URLSearchParams();
+        Object.entries(q).forEach(([k, v]) => {
+            if (v == null) return;
+            if (Array.isArray(v)) v.forEach(item => p.append(k, String(item)));
+            else p.append(k, String(v));
+        });
+        const s = p.toString();
+        return s ? `?${s}` : '';
+    }
 
-  public request = async <T = any, E = any>({
-    body,
-    secure,
-    path,
-    type,
-    query,
-    format,
-    baseUrl,
-    cancelToken,
-    ...params
-  }: FullRequestParams): Promise<HttpResponse<T, E>> => {
-    const secureParams =
-      ((typeof secure === "boolean" ? secure : this.baseApiParams.secure) &&
-        this.securityWorker &&
-        (await this.securityWorker(this.securityData))) ||
-      {};
-    const requestParams = this.mergeRequestParams(params, secureParams);
-    const queryString = query && this.toQueryString(query);
-    const payloadFormatter = this.contentFormatters[type || ContentType.Json];
-    const responseFormat = format || requestParams.format;
+    // Format body based on ContentType
+    private formatBody(body: any, type: ContentType): BodyInit {
+        switch (type) {
+            case ContentType.Json:
+                return JSON.stringify(body);
+            case ContentType.UrlEncoded:
+                return new URLSearchParams(body).toString();
+            case ContentType.FormData: {
+                const fd = new FormData();
+                Object.entries(body || {}).forEach(([k, v]) => {
+                    if (Array.isArray(v)) {
+                        v.forEach(item => this.appendForm(fd, k, item));
+                    } else {
+                        this.appendForm(fd, k, v);
+                    }
+                });
+                return fd;
+            }
+            case ContentType.Text:
+                return typeof body === 'string' ? body : JSON.stringify(body);
+        }
+    }
 
-    return this.customFetch(`${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`, {
-      ...requestParams,
-      headers: {
-        ...(requestParams.headers || {}),
-        ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
-      },
-      signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null,
-      body: typeof body === "undefined" || body === null ? null : payloadFormatter(body),
-    }).then(async (response) => {
-      const r = response as HttpResponse<T, E>;
-      r.data = null as unknown as T;
-      r.error = null as unknown as E;
+    private appendForm(fd: FormData, key: string, value: any) {
+        if (value instanceof Blob) fd.append(key, value);
+        else if (typeof value === 'object') fd.append(key, JSON.stringify(value));
+        else fd.append(key, String(value));
+    }
 
-      const data = !responseFormat
-        ? r
-        : await response[responseFormat]()
-            .then((data) => {
-              if (r.ok) {
-                r.data = data;
-              } else {
-                r.error = data;
-              }
-              return r;
-            })
-            .catch((e) => {
-              r.error = e;
-              return r;
-            });
+    // Parse + throw on non-ok
+    private async handleResponse<T, E>(
+        res: Response,
+        format: ResponseFormat
+    ): Promise<T> {
+        const data = await res[format]();
+        if (res.ok) return data as T;
+        const msg = errorMessages[res.status] ?? `HTTP Error ${res.status}`;
+        throw new HttpError(res, msg);
+    }
 
-      if (cancelToken) {
-        this.abortControllers.delete(cancelToken);
-      }
+    public async request<T = any, E = any>(
+        params: FullRequestParams
+    ): Promise<HttpResponse<T, E>> {
+        const {
+            secure,
+            path,
+            query,
+            body,
+            type = ContentType.Json,
+            format = 'json' as ResponseFormat,
+            baseUrl,
+            cancelToken,
+            ...userParams
+        } = params;
 
-      if (!response.ok) throw data;
-      return data;
-    });
-  };
+        // 1) Security
+        let securityParams: RequestParams = {};
+        if (secure && this.securityData && this.securityWorker) {
+            const result = await this.securityWorker(this.securityData);
+            if (result) securityParams = result;
+        }
+
+        // 2) Build URL + params
+        const url = `${baseUrl ?? this.baseUrl}${path}${this.buildQuery(query)}`;
+        const merged = {
+            ...this.defaultParams,
+            ...securityParams,
+            ...userParams,
+        };
+        const headers = { ...merged.headers };
+        if (type !== ContentType.FormData) {
+            headers['Content-Type'] = type;
+        }
+
+        // 3) Abort handling
+        if (cancelToken != null) {
+            const ctr = new AbortController();
+            this.abortControllers.set(cancelToken, ctr);
+            merged.signal = ctr.signal;
+        }
+
+        const init: RequestInit = {
+            ...merged,
+            method: merged.method ?? 'GET',
+            headers,
+            body: body != null ? this.formatBody(body, type) : undefined,
+        };
+
+        // 4) Fetch + handle errors
+        let res: Response;
+        try {
+            res = await this.fetchFn(url, init);
+        } catch (err) {
+            console.error("ERROR + {}", err);
+            throw new NetworkError(err as Error);
+        } finally {
+            if (cancelToken != null) {
+                this.abortControllers.delete(cancelToken);
+            }
+        }
+
+        const data = await this.handleResponse<T, E>(res, format);
+        return Object.assign(res, { data, error: undefined });
+    }
 }
