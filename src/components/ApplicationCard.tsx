@@ -6,7 +6,7 @@ import {Clock, ChevronDown, MoreVertical, Edit, Trash2, ExternalLink, Briefcase}
 import {Card, CardContent, CardFooter, CardHeader} from "@/components/ui/card";
 import {JobApplication, Status, statusDetailsMap, statuses} from "@/types/Applications.ts";
 import {formatRelativeTime, formatTimelineDate} from "utils/DateUtil.ts";
-import {getCompanyColor, getCompanyInitials} from "utils/StringUtil.ts";
+import {getColor, getInitials} from "utils/StringUtil.ts";
 
 
 // Props for the ApplicationCard component
@@ -52,8 +52,8 @@ export function ApplicationCard({application, onRequestStatusChange, onEdit, onD
                 <div className="flex items-start gap-3">
                     {/* Company Avatar */}
                     <div
-                        className={`shrink-0 h-10 w-10 rounded-md ring-1 ring-gray-200 flex items-center justify-center text-sm font-bold ${getCompanyColor(application.company)}`}>
-                        {getCompanyInitials(application.company)}
+                        className={`shrink-0 h-10 w-10 rounded-md ring-1 ring-gray-200 flex items-center justify-center text-sm font-bold ${getColor(application.company)}`}>
+                        {getInitials(application.company)}
                     </div>
 
                     {/* Position & Company */}
