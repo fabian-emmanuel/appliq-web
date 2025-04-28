@@ -29,3 +29,4 @@ yarn.lock
 
 # Yarn v4 - non-zero-installs approach
 !/.yarn/
+/tsconfig.node.tsbuildinfo
