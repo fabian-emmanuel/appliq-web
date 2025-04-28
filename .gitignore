@@ -25,4 +25,14 @@ dist-ssr
 .env
 yarn.lock
 .git
-.yarn
+# Dependency directories
+
+# Yarn v4 - non-zero-installs approach
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+!/.yarn/
