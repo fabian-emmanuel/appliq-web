@@ -3,7 +3,7 @@ services:
   frontend:
     build: .
     ports:
-      - "8080:80"
+      - "5173:80"
     volumes:
       - ./src:/app/src
       - ./public:/app/public
