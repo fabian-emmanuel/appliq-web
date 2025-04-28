@@ -1,22 +1,21 @@
-import React, {startTransition, useEffect, useState} from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Logo } from "components/Logo";
-import { AlertCircle, Lock, Mail } from "lucide-react";
-import { useForm } from "react-hook-form";
+import React, {startTransition, useState} from "react";
+import {useNavigate, Link} from "react-router-dom";
+import {Button} from "@/components/ui/button";
+import {Card, CardContent, CardFooter, CardHeader} from "@/components/ui/card";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {Checkbox} from "@/components/ui/checkbox";
+import {Logo} from "components/Logo";
+import {AlertCircle, Lock, Mail} from "lucide-react";
+import {useForm} from "react-hook-form";
+import {useAuthContext} from '@/contexts/AuthContext';
+import {LoginForm} from "@/types/Auth.ts";
+import {useAuthService} from "@/services/auth-service.ts";
 
-type FormData = {
-    email: string;
-    password: string;
-    rememberMe: boolean;
-};
 
 const LoginPage = () => {
 
+    const {setToken} = useAuthContext();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -27,7 +26,7 @@ const LoginPage = () => {
         });
     };
 
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+    const {register, handleSubmit, formState: {errors}} = useForm<LoginForm>({
         defaultValues: {
             email: "",
             password: "",
@@ -35,18 +34,29 @@ const LoginPage = () => {
         }
     });
 
-    const onSubmit = async (data: FormData) => {
+    const onSubmit = async (data: LoginForm) => {
         setIsLoading(true);
         setError(null);
 
         try {
-            // Simulating API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            console.log("Login Data:", data);
+            console.log("Calling login API...");
+            const response = await useAuthService.login(data);
+            console.log("Login API response:", response);
 
-            // If login successful, redirect to dashboard
-            navigate("/dashboard");
+            if (response && response.access_token) {
+                const userData = await setToken(response.access_token);
+
+                if (userData) {
+                    navigate("/dashboard");
+                } else {
+                    setError("Failed to load user data. Please try again.");
+                }
+            } else {
+                console.error("Missing access token in response:", response);
+                setError("Invalid response from server. Please try again.");
+            }
         } catch (err) {
+            console.error("Login error:", err);
             setError("Invalid email or password. Please try again.");
         } finally {
             setIsLoading(false);
@@ -56,15 +66,17 @@ const LoginPage = () => {
     return (
         <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900">
             {/* Left side with background and branding */}
-            <div className="hidden lg:flex lg:w-1/2 bg-linear-to-r from-blue-500 to-indigo-600 flex-col justify-center items-center p-12 text-white">
+            <div
+                className="hidden lg:flex lg:w-1/2 bg-linear-to-r from-blue-500 to-indigo-600 flex-col justify-center items-center p-12 text-white">
                 <div className="max-w-md">
-                    <Logo size="lg" className="mb-8" />
+                    <Logo size="lg" className="mb-8"/>
                     <h1 className="text-4xl font-bold mb-6">Welcome back!</h1>
                     <p className="text-lg opacity-90 mb-8">
-                        Log in to access your AppliQ dashboard and continue tracking your job applications.
+                        Log in to access your AppliQ dashboard and continue managing your job applications.
                     </p>
                     <div className="bg-white/10 p-6 rounded-lg backdrop-blur-xs">
-                        <p className="italic text-sm mb-4">"AppliQ has helped me organize my job applications and help manage interviews for my dream companies."</p>
+                        <p className="italic text-sm mb-4">"AppliQ has helped me organize my job applications and help
+                            manage interviews for my dream companies."</p>
                         <div className="flex items-center">
                             <div className="w-10 h-10 rounded-full bg-white/20 mr-3"></div>
                             <div>
@@ -81,7 +93,7 @@ const LoginPage = () => {
                 <Card className="w-full max-w-md shadow-lg border-0">
                     <CardHeader className="space-y-2 text-center pb-6">
                         <div className="flex justify-center mb-2 lg:hidden">
-                            <Logo size="md" />
+                            <Logo size="md"/>
                         </div>
                         <h2 className="text-2xl font-semibold">Log in to your account</h2>
                         <p className="text-sm text-muted-foreground">
@@ -90,8 +102,9 @@ const LoginPage = () => {
                     </CardHeader>
 
                     {error && (
-                        <div className="mx-6 mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-md flex items-center text-sm">
-                            <AlertCircle className="h-4 w-4 mr-2" />
+                        <div
+                            className="mx-6 mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-md flex items-center text-sm">
+                            <AlertCircle className="h-4 w-4 mr-2"/>
                             {error}
                         </div>
                     )}
@@ -101,7 +114,7 @@ const LoginPage = () => {
                             <div className="space-y-2">
                                 <Label htmlFor="email">Email address</Label>
                                 <div className="relative">
-                                    <Mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                                    <Mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground"/>
                                     <Input
                                         id="email"
                                         className="pl-10"
@@ -132,7 +145,7 @@ const LoginPage = () => {
                                     </Link>
                                 </div>
                                 <div className="relative">
-                                    <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                                    <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground"/>
                                     <Input
                                         id="password"
                                         type="password"
@@ -173,7 +186,8 @@ const LoginPage = () => {
 
                             <div className="text-sm text-center text-muted-foreground">
                                 Don't have an account?{" "}
-                                <button onClick={handleSignUpClick} className="text-primary font-medium hover:underline">
+                                <button onClick={handleSignUpClick}
+                                        className="text-primary font-medium hover:underline">
                                     Create an account
                                 </button>
                             </div>
