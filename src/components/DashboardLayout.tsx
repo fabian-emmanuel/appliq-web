@@ -110,7 +110,7 @@ export function DashboardLayout({children}: Props) {
                     </Button>
                 ))}
             </nav>
-            <div className="mt-auto border-t p-4">
+            <div className="h-23 mt-auto border-t p-6">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="w-full justify-start px-2">
