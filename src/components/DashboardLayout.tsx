@@ -4,9 +4,25 @@ import { Logo } from "components/Logo";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/components/hooks/use-theme";
-import { Home, Briefcase, Settings, LogOut, Menu, Sun, Moon, Laptop } from "lucide-react";
+import {
+  Home,
+  Briefcase,
+  Settings,
+  LogOut,
+  Menu,
+  Sun,
+  Moon,
+  Laptop,
+} from "lucide-react";
 
 interface Props {
   children: React.ReactNode;
@@ -40,15 +56,15 @@ export function DashboardLayout({ children }: Props) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme('light')}>
+        <DropdownMenuItem onClick={() => setTheme("light")}>
           <Sun className="mr-2 h-4 w-4" />
           <span>Light</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('dark')}>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>
           <Moon className="mr-2 h-4 w-4" />
           <span>Dark</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('system')}>
+        <DropdownMenuItem onClick={() => setTheme("system")}>
           <Laptop className="mr-2 h-4 w-4" />
           <span>System</span>
         </DropdownMenuItem>
@@ -57,10 +73,10 @@ export function DashboardLayout({ children }: Props) {
   );
 
   interface SidebarProps {
-  navigate: ReturnType<typeof useNavigate>;
-}
+    navigate: ReturnType<typeof useNavigate>;
+  }
 
-const SidebarContent = ({ navigate }: SidebarProps) => (
+  const SidebarContent = ({ navigate }: SidebarProps) => (
     <div className="flex h-full flex-col">
       <div className="flex h-16 items-center border-b px-4 shrink-0">
         <Logo size="sm" />
@@ -81,28 +97,34 @@ const SidebarContent = ({ navigate }: SidebarProps) => (
           </Button>
         ))}
       </nav>
-      <div className="mt-auto border-t p-4">
+      <div className="border-t h-23 p-6">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-             <Button variant="ghost" className="w-full justify-start px-2">
-                <Avatar className="h-8 w-8 mr-2">
-                  <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                  <AvatarFallback>EF</AvatarFallback> {/* Placeholder Initials */}
-                </Avatar>
-                <span className="truncate">Emmanuel Fabian</span> {/* Placeholder Name */}
-             </Button>
+            <Button variant="ghost" className="w-full justify-start px-2">
+              <Avatar className="h-8 w-8 mr-2">
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  alt="@shadcn"
+                />
+                <AvatarFallback>EF</AvatarFallback> {/* Placeholder Initials */}
+              </Avatar>
+              <span className="truncate">Emmanuel Fabian</span>{" "}
+              {/* Placeholder Name */}
+            </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 mb-2" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">Emmanuel Fabian</p>
+                <p className="text-sm font-medium leading-none">
+                  Emmanuel Fabian
+                </p>
                 <p className="text-xs leading-none text-muted-foreground">
                   m@example.com {/* Placeholder Email */}
                 </p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate('/settings')}>
+            <DropdownMenuItem onClick={() => navigate("/settings")}>
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>
             </DropdownMenuItem>
@@ -116,7 +138,6 @@ const SidebarContent = ({ navigate }: SidebarProps) => (
       </div>
     </div>
   );
-
 
   return (
     <div className="flex min-h-screen w-full">
@@ -137,7 +158,7 @@ const SidebarContent = ({ navigate }: SidebarProps) => (
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-64 p-0">
-               <SidebarContent navigate={undefined} />
+              <SidebarContent navigate={undefined} />
             </SheetContent>
           </Sheet>
 
