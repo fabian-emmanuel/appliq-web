@@ -20,6 +20,9 @@ COPY . .
 # This bypasses the tsc errors while still building your app
 ARG NODE_ENV=production
 ENV VITE_NODE_ENV=${NODE_ENV}
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 RUN yarn vite build
 
 FROM nginx:alpine
