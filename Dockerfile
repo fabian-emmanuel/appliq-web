@@ -18,7 +18,10 @@ COPY . .
 
 # Skip TypeScript build step and go directly to Vite build
 # This bypasses the tsc errors while still building your app
-ENV NODE_ENV=production
+ARG NODE_ENV=production
+ARG VITE_API_BASE_URL
+ENV VITE_NODE_ENV=${NODE_ENV}
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
 RUN yarn vite build
 
 FROM nginx:alpine
