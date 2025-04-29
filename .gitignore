@@ -28,5 +28,6 @@ yarn.lock
 # Dependency directories
 
 # Yarn v4 - non-zero-installs approach
-!/.yarn/
+/.yarn/
 /tsconfig.node.tsbuildinfo
+/bun.lock

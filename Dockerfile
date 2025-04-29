@@ -1,17 +1,13 @@
-
-FROM node:20-alpine AS builder
+FROM oven/bun:1-alpine AS builder
 RUN apk add --no-cache python3 make g++
 
 WORKDIR /app
-RUN corepack enable \
- && corepack prepare yarn@stable --activate
 
-# Copy package.json and yarn configs
-COPY package.json .yarnrc.yml ./
-COPY .yarn .yarn
+# Copy package.json (no need for yarn-specific configs)
+COPY package.json ./
 
-# Install dependencies
-RUN yarn install --network-timeout 100000
+# Install dependencies with Bun
+RUN bun install --frozen-lockfile
 
 # Copy source code
 COPY . .
@@ -23,7 +19,7 @@ ENV VITE_NODE_ENV=${NODE_ENV}
 ARG VITE_API_BASE_URL
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
-RUN yarn vite build
+RUN bun run vite build
 
 FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
