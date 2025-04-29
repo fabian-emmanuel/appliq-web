@@ -26,7 +26,7 @@ export class HttpClient<SecData = unknown> {
     constructor(config: ApiConfig<SecData> = {}) {
         this.baseUrl = config.baseUrl ?? '';
         this.securityWorker = config.securityWorker;
-        this.fetchFn = config.customFetch ?? globalThis.fetch.bind(globalThis);
+        this.fetchFn = config.customFetch ?? window.fetch.bind(window);
         if (config.baseApiParams) {
             this.defaultParams = { ...this.defaultParams, ...config.baseApiParams };
         }
@@ -78,7 +78,7 @@ export class HttpClient<SecData = unknown> {
         else fd.append(key, String(value));
     }
 
-    // Parse + throw on non-ok
+    // Parse add throw on non-ok
     private async handleResponse<T, E>(
         res: Response,
         format: ResponseFormat
@@ -142,7 +142,7 @@ export class HttpClient<SecData = unknown> {
         try {
             res = await this.fetchFn(url, init);
         } catch (err) {
-            console.error("ERROR + {}", err);
+            console.error("ERROR::", err);
             throw new NetworkError(err as Error);
         } finally {
             if (cancelToken != null) {

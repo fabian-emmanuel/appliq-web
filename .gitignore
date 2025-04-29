@@ -25,4 +25,10 @@ dist-ssr
 .env
 yarn.lock
 .git
-.yarn
+# Dependency directories
+
+# Yarn v4 - non-zero-installs approach
+/.yarn/
+/tsconfig.node.tsbuildinfo
+/bun.lock
+/bun.lockb
