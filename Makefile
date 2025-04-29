@@ -1,9 +1,9 @@
 
 install:
-	yarn install
+	bun install
 
 run:
-	yarn dev
+	bun dev
 
 
 docker-build:
