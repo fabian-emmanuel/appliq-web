@@ -9,15 +9,10 @@ import { Logo } from "components/Logo";
 import { AlertCircle, Check, Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { startTransition } from "react";
+import { useAuthService } from "@/services/auth-service";
+import { UserRequest } from "types/User";
 
 
-type FormData = {
-    fullName: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-    acceptTerms: boolean;
-};
 
 const SignUpPage = () => {
     const navigate = useNavigate();
@@ -25,6 +20,8 @@ const SignUpPage = () => {
     const [error, setError] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState(false);
     const [passwordStrength, setPasswordStrength] = useState(0);
+    // const authService = useAuthService();
+
     const handleLoginClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         startTransition(() => {
@@ -38,13 +35,14 @@ const SignUpPage = () => {
         handleSubmit,
         watch,
         formState: { errors }
-    } = useForm<FormData>({
+    } = useForm<UserRequest>({
         defaultValues: {
-            fullName: "",
+            first_name: "",
+            last_name: "",
             email: "",
             password: "",
             confirmPassword: "",
-            acceptTerms: false
+            acceptTerms: true
         }
     });
 
@@ -92,30 +90,62 @@ const SignUpPage = () => {
         return "bg-green-500";
     };
 
-    const onSubmit = async (data: FormData) => {
-        setIsLoading(true);
-        setError(null);
+    // const onSubmit = async (data: FormData) => {
+    //     setIsLoading(true);
+    //     setError(null);
 
-        // Password match check (could be done in the form validation too)
-        if (data.password !== data.confirmPassword) {
-            setError("Passwords do not match");
-            setIsLoading(false);
-            return;
-        }
+    //     // Password match check (could be done in the form validation too)
+    //     if (data.password !== data.confirmPassword) {
+    //         setError("Passwords do not match");
+    //         setIsLoading(false);
+    //         return;
+    //     }
 
-        try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            console.log("Sign-Up Data:", data);
+        // try {
+        //     // Simulate API call
+        //     await new Promise(resolve => setTimeout(resolve, 1500));
+        //     console.log("Sign-Up Data:", data);
 
-            // Redirect to a welcome/onboarding page or dashboard
-            navigate("/dashboard");
-        } catch (err) {
-            setError("There was a problem creating your account. Please try again.");
-        } finally {
-            setIsLoading(false);
-        }
-    };
+        //     // Redirect to a welcome/onboarding page or dashboard
+        //     navigate("/dashboard");
+        // } catch (err) {
+        //     setError("There was a problem creating your account. Please try again.");
+        // } finally {
+        //     setIsLoading(false);
+        // }
+
+        const onSubmit = async (data: UserRequest) => {
+            setIsLoading(true);
+            setError(null);
+        
+            if (data.password !== data.confirmPassword) {
+                setError("Passwords do not match");
+                setIsLoading(false);
+                return;
+            }
+            if (!data.acceptTerms) {
+                setError("You must accept the Terms and Conditions to create an account.")
+                setIsLoading(false);
+                return;
+            }
+        
+            try {
+                const resp = await useAuthService.register(data);
+                
+                // if (!resp) {
+                //     throw new Error('Failed to register');
+                // }
+        
+                console.log("Registration Successful:", resp);        
+                navigate("/login-page");
+            } catch (err: any) {
+                console.error("Error during registration:", err);
+                setError(err.message || "There was a problem creating your account. Please try again.");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        
 
     return (
         <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900">
@@ -142,23 +172,42 @@ const SignUpPage = () => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="fullName">Full name</Label>
+                                <Label htmlFor="first_name">First name</Label>
                                 <div className="relative">
                                     <User className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
                                     <Input
-                                        id="fullName"
+                                        id="first_name"
                                         className="pl-10"
-                                        placeholder="John Doe"
-                                        {...register("fullName", {
-                                            required: "Full name is required"
+                                        placeholder="John"
+                                        {...register("first_name", {
+                                            required: "First name is required"
                                         })}
-                                        aria-invalid={errors.fullName ? "true" : "false"}
+                                        aria-invalid={errors.first_name ? "true" : "false"}
                                     />
                                 </div>
-                                {errors.fullName && (
-                                    <p className="text-sm text-red-500 mt-1">{errors.fullName.message}</p>
+                                {errors.first_name && (
+                                    <p className="text-sm text-red-500 mt-1">{errors.first_name.message}</p>
                                 )}
                             </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="last_name">Last name</Label>
+                                <div className="relative">
+                                    <User className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                                    <Input
+                                        id="last_name"
+                                        className="pl-10"
+                                        placeholder="Doe"
+                                        {...register("last_name", {
+                                            required: "Last name is required"
+                                        })}
+                                        aria-invalid={errors.last_name ? "true" : "false"}
+                                    />
+                                </div>
+                                {errors.last_name && (
+                                    <p className="text-sm text-red-500 mt-1">{errors.last_name.message}</p>
+                                )}
+                            </div>
+
 
                             <div className="space-y-2">
                                 <Label htmlFor="email">Email address</Label>
