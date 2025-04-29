@@ -13,3 +13,14 @@ export enum Role {
     Admin = 'Admin',
     User = 'User'
 }
+
+export interface UserRequest {
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    acceptTerms: boolean;
+};
+
+
