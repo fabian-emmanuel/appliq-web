@@ -1,5 +1,4 @@
 import react from "@vitejs/plugin-react";
-import "dotenv/config";
 import { defineConfig } from "vite";
 import tsConfigPaths from "vite-tsconfig-paths";
 // @ts-ignore

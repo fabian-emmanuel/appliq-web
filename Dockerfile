@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package.json ./
 
 # Install dependencies with Bun
-RUN bun install --frozen-lockfile
+RUN bun install
 
 # Copy source code
 COPY . .
@@ -19,7 +19,7 @@ ENV VITE_NODE_ENV=${NODE_ENV}
 ARG VITE_API_BASE_URL
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
-RUN bun run vite build
+RUN bun run build
 
 FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html

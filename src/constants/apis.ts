@@ -6,5 +6,5 @@ if (!import.meta.env.VITE_API_BASE_URL) {
 
 console.log("API Base URL:", import.meta.env.VITE_API_BASE_URL);
 
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://appliq-dev.up.railway.app/api/v1';//todo-refactor this line so url is not hardcoded
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const AUTH_TOKEN_KEY = 'auth_token';

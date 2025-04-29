@@ -31,3 +31,4 @@ yarn.lock
 /.yarn/
 /tsconfig.node.tsbuildinfo
 /bun.lock
+/bun.lockb

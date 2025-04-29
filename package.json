@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "dev": "bun run --bun vite",
+    "build": "bun run --bun vite build",
+    "lint": "bun run --bun eslint .",
+    "preview": "bun run --bun vite preview"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.8",
@@ -63,11 +63,10 @@
     "vaul": "^0.9.9"
   },
   "devDependencies": {
-    "@types/node": "20.6.2",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
-    "dotenv": "16.4.5",
+    "bun-types": "^1.2.11",
     "eslint": "8.45.0",
     "tailwindcss": "^4.1.4",
     "typescript": "5.2.2",
