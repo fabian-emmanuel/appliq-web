@@ -6,11 +6,12 @@ import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Logo} from "components/Logo";
-import {AlertCircle, Lock, Mail} from "lucide-react";
+import {AlertCircle, Eye, EyeOff, Lock, Mail} from "lucide-react";
 import {useForm} from "react-hook-form";
 import {useAuthContext} from '@/contexts/AuthContext';
 import {LoginForm} from "@/types/Auth.ts";
 import {useAuthService} from "@/services/auth-service.ts";
+import {FaGithub as Github, FaGoogle as Google} from 'react-icons/fa';
 
 
 const LoginPage = () => {
@@ -19,6 +20,7 @@ const LoginPage = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [showPassword, setShowPassword] = useState(false);
     const handleSignUpClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         startTransition(() => {
@@ -148,8 +150,8 @@ const LoginPage = () => {
                                     <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground"/>
                                     <Input
                                         id="password"
-                                        type="password"
-                                        className="pl-10"
+                                        type={showPassword ? "text" : "password"}
+                                        className="pl-10 pr-10"
                                         placeholder="••••••••"
                                         {...register("password", {
                                             required: "Password is required",
@@ -160,6 +162,17 @@ const LoginPage = () => {
                                         })}
                                         aria-invalid={errors.password ? "true" : "false"}
                                     />
+                                    <button
+                                        type="button"
+                                        className="absolute right-3 top-2.5 text-muted-foreground hover:cursor-pointer"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        {showPassword ? (
+                                            <EyeOff className="h-5 w-5"/>
+                                        ) : (
+                                            <Eye className="h-5 w-5"/>
+                                        )}
+                                    </button>
                                 </div>
                                 {errors.password && (
                                     <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>
@@ -172,23 +185,52 @@ const LoginPage = () => {
                                     Remember me for 30 days
                                 </Label>
                             </div>
-                        </CardContent>
-
-                        <CardFooter className="flex flex-col space-y-4">
                             <Button
                                 type="submit"
-                                className="w-full"
+                                className="w-full hover:cursor-pointer"
                                 size="lg"
                                 disabled={isLoading}
                             >
                                 {isLoading ? "Signing in..." : "Sign in"}
                             </Button>
 
+                            <div className="mt-6">
+                                <div className="relative">
+                                    <div className="absolute inset-0 flex items-center">
+                                        <div className="w-full border-t border-gray-700"></div>
+                                    </div>
+                                    <div className="relative flex justify-center text-xs uppercase">
+                                        <span className="dark:bg-slate-950 px-2 text-gray-400">Or continue with</span>
+                                    </div>
+                                </div>
+
+                                <div className="mt-6 grid grid-cols-2 gap-4">
+                                    <Button
+                                        variant="outline"
+                                        className="border-gray-700 bg-[#333333] hover:bg-gray-700 hover:cursor-pointer"
+                                    >
+                                        <Github className="mr-2 h-4 w-4"/>
+                                        GitHub
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        className="border-gray-700 bg-[#333333] hover:bg-gray-700 hover:cursor-pointer"
+                                    >
+                                        <Google className="mr-2 h-4 w-4"/>
+
+                                        Google
+                                    </Button>
+                                </div>
+                            </div>
+                        </CardContent>
+
+                        <CardFooter className="flex flex-col space-y-4">
+
                             <div className="text-sm text-center text-muted-foreground">
                                 Don't have an account?{" "}
                                 <button onClick={handleSignUpClick}
-                                        className="text-primary font-medium hover:underline">
-                                    Create an account
+                                        className="text-primary font-medium hover:underline hover:cursor-pointer">
+                                    Sign up
                                 </button>
                             </div>
                         </CardFooter>
