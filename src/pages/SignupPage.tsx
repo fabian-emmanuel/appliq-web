@@ -26,7 +26,7 @@ import {useAuthService} from "@/services/auth-service";
 import {UserRequest} from "types/User";
 import {getPasswordStrength, getPasswordStrengthColor, getPasswordStrengthLabel} from "utils/StringUtil.ts";
 import {passwordRequirements} from "utils/RegexUtil.ts";
-import {FaGithub as Github, FaGoogle as Google} from 'react-icons/fa';
+import {FaGithub as Github, FaGoogle as Google, FaLinkedinIn as LinkedIn} from 'react-icons/fa';
 
 
 const SignUpPage = () => {
@@ -351,7 +351,7 @@ const SignUpPage = () => {
                                     </div>
                                 </div>
 
-                                <div className="mt-6 grid grid-cols-2 gap-4">
+                                <div className="mt-6 grid grid-cols-3 gap-4">
                                     <Button
                                         variant="outline"
                                         className="border-gray-700 bg-[#333333] hover:bg-gray-700 hover:cursor-pointer"
@@ -366,6 +366,15 @@ const SignUpPage = () => {
                                         <Google className="mr-2 h-4 w-4"/>
 
                                         Google
+                                    </Button>
+
+                                    <Button
+                                        variant="outline"
+                                        className="border-gray-700 bg-[#333333] hover:bg-gray-700 hover:cursor-pointer"
+                                    >
+                                        <LinkedIn className="mr-2 h-4 w-4"/>
+
+                                        LinkedIn
                                     </Button>
                                 </div>
                             </div>
