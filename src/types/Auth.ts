@@ -7,8 +7,8 @@ export interface LoginForm {
 
 
 export interface LoginResponse {
-    access_token: string;
-    expires_in: number;
-    refresh_token: string;
-    refresh_expires_in: number;
+    accessToken: string;
+    expiresIn: number;
+    refreshToken: string;
+    refreshExpiresIn: number;
 }

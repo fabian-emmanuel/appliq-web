@@ -45,8 +45,8 @@ const LoginPage = () => {
             const response = await useAuthService.login(data);
             console.log("Login API response:", response);
 
-            if (response && response.access_token) {
-                const userData = await setToken(response.access_token);
+            if (response && response.accessToken) {
+                const userData = await setToken(response.accessToken);
 
                 if (userData) {
                     navigate("/dashboard");

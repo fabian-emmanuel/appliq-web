@@ -1,12 +1,12 @@
 export interface User {
     id: number
-    first_name: string
-    last_name: string
+    firstName: string
+    lastName: string
     email: string
     role: Role
-    created_at: Date
-    last_login_at: Date | null
-    is_verified: boolean
+    createdAt: Date
+    lastLoginAt: Date | null
+    isVerified: boolean
 }
 
 export enum Role {
@@ -15,8 +15,8 @@ export enum Role {
 }
 
 export interface UserRequest {
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
     confirmPassword: string;
