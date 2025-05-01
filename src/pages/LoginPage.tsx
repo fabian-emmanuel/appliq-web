@@ -28,11 +28,11 @@ const LoginPage = () => {
         });
     };
 
-    const {register, handleSubmit, formState: {errors}} = useForm<LoginForm>({
+    const {register, handleSubmit, watch, setValue, formState: {errors}} = useForm<LoginForm>({
         defaultValues: {
             email: "",
             password: "",
-            rememberMe: false
+            remember_me: false
         }
     });
 
@@ -41,10 +41,7 @@ const LoginPage = () => {
         setError(null);
 
         try {
-            console.log("Calling login API...");
             const response = await useAuthService.login(data);
-            console.log("Login API response:", response);
-
             if (response && response.access_token) {
                 const userData = await setToken(response.access_token);
 
@@ -180,8 +177,15 @@ const LoginPage = () => {
                             </div>
 
                             <div className="flex items-center space-x-2">
-                                <Checkbox id="rememberMe" {...register("rememberMe")} />
-                                <Label htmlFor="rememberMe" className="text-sm font-normal">
+                                <Checkbox id="remember_me"
+                                          checked={watch("remember_me")}
+                                          onCheckedChange={(checked) => {
+                                              setValue("remember_me", checked == true, {
+                                                  shouldValidate: true,
+                                              });
+                                          }}
+                                />
+                                <Label htmlFor="remember_me" className="text-sm font-normal">
                                     Remember me for 30 days
                                 </Label>
                             </div>
