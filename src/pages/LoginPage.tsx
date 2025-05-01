@@ -11,7 +11,7 @@ import {useForm} from "react-hook-form";
 import {useAuthContext} from '@/contexts/AuthContext';
 import {LoginForm} from "@/types/Auth.ts";
 import {useAuthService} from "@/services/auth-service.ts";
-import {FaGithub as Github, FaGoogle as Google} from 'react-icons/fa';
+import {FaGithub as Github, FaGoogle as Google, FaLinkedinIn as LinkedIn} from 'react-icons/fa';
 
 
 const LoginPage = () => {
@@ -208,7 +208,7 @@ const LoginPage = () => {
                                     </div>
                                 </div>
 
-                                <div className="mt-6 grid grid-cols-2 gap-4">
+                                <div className="mt-6 grid grid-cols-3 gap-4">
                                     <Button
                                         variant="outline"
                                         className="border-gray-700 bg-[#333333] hover:bg-gray-700 hover:cursor-pointer"
@@ -223,6 +223,15 @@ const LoginPage = () => {
                                         <Google className="mr-2 h-4 w-4"/>
 
                                         Google
+                                    </Button>
+
+                                    <Button
+                                        variant="outline"
+                                        className="border-gray-700 bg-[#333333] hover:bg-gray-700 hover:cursor-pointer"
+                                    >
+                                        <LinkedIn className="mr-2 h-4 w-4"/>
+
+                                        LinkedIn
                                     </Button>
                                 </div>
                             </div>
