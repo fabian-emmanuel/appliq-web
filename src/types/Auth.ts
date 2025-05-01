@@ -2,7 +2,7 @@
 export interface LoginForm {
     email: string;
     password: string;
-    remember_me: boolean;
+    rememberMe: boolean;
 }
 
 
