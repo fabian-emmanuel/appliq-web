@@ -51,8 +51,8 @@ const SignUpPage = () => {
         formState: {errors},
     } = useForm<UserRequest>({
         defaultValues: {
-            first_name: "",
-            last_name: "",
+            firstName: "",
+            lastName: "",
             email: "",
             password: "",
             confirmPassword: "",
@@ -135,42 +135,42 @@ const SignUpPage = () => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="first_name">First name</Label>
+                                <Label htmlFor="firstName">First name</Label>
                                 <div className="relative">
                                     <User className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground"/>
                                     <Input
-                                        id="first_name"
+                                        id="firstName"
                                         className="pl-10"
                                         placeholder="John"
-                                        {...register("first_name", {
+                                        {...register("firstName", {
                                             required: "First name is required",
                                         })}
-                                        aria-invalid={errors.first_name ? "true" : "false"}
+                                        aria-invalid={errors.firstName ? "true" : "false"}
                                     />
                                 </div>
-                                {errors.first_name && (
+                                {errors.firstName && (
                                     <p className="text-sm text-red-500 mt-1">
-                                        {errors.first_name.message}
+                                        {errors.firstName.message}
                                     </p>
                                 )}
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="last_name">Last name</Label>
+                                <Label htmlFor="lastName">Last name</Label>
                                 <div className="relative">
                                     <User className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground"/>
                                     <Input
-                                        id="last_name"
+                                        id="lastName"
                                         className="pl-10"
                                         placeholder="Doe"
-                                        {...register("last_name", {
+                                        {...register("lastName", {
                                             required: "Last name is required",
                                         })}
-                                        aria-invalid={errors.last_name ? "true" : "false"}
+                                        aria-invalid={errors.lastName ? "true" : "false"}
                                     />
                                 </div>
-                                {errors.last_name && (
+                                {errors.lastName && (
                                     <p className="text-sm text-red-500 mt-1">
-                                        {errors.last_name.message}
+                                        {errors.lastName.message}
                                     </p>
                                 )}
                             </div>
@@ -182,7 +182,7 @@ const SignUpPage = () => {
                                     <Input
                                         id="email"
                                         className="pl-10"
-                                        placeholder="name@example.com"
+                                        placeholder="johndoe@email.com"
                                         {...register("email", {
                                             required: "Email is required",
                                             pattern: {

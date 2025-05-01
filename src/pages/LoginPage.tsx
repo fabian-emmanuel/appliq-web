@@ -32,7 +32,7 @@ const LoginPage = () => {
         defaultValues: {
             email: "",
             password: "",
-            remember_me: false
+            rememberMe: false
         }
     });
 
@@ -42,8 +42,9 @@ const LoginPage = () => {
 
         try {
             const response = await useAuthService.login(data);
-            if (response && response.access_token) {
-                const userData = await setToken(response.access_token);
+
+            if (response && response.accessToken) {
+                const userData = await setToken(response.accessToken);
 
                 if (userData) {
                     navigate("/dashboard");
@@ -177,15 +178,15 @@ const LoginPage = () => {
                             </div>
 
                             <div className="flex items-center space-x-2">
-                                <Checkbox id="remember_me"
-                                          checked={watch("remember_me")}
+                                <Checkbox id="rememberMe"
+                                          checked={watch("rememberMe")}
                                           onCheckedChange={(checked) => {
-                                              setValue("remember_me", checked == true, {
+                                              setValue("rememberMe", checked == true, {
                                                   shouldValidate: true,
                                               });
                                           }}
                                 />
-                                <Label htmlFor="remember_me" className="text-sm font-normal">
+                                <Label htmlFor="rememberMe" className="text-sm font-normal">
                                     Remember me for 30 days
                                 </Label>
                             </div>
