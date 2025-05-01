@@ -11,7 +11,7 @@ import {useForm} from "react-hook-form";
 import {useAuthContext} from '@/contexts/AuthContext';
 import {LoginForm} from "@/types/Auth.ts";
 import {useAuthService} from "@/services/auth-service.ts";
-import {FaGithub as Github, FaGoogle as Google} from 'react-icons/fa';
+import {FaGithub as Github, FaGoogle as Google, FaLinkedinIn as LinkedIn} from 'react-icons/fa';
 
 
 const LoginPage = () => {
@@ -28,7 +28,7 @@ const LoginPage = () => {
         });
     };
 
-    const {register, handleSubmit, formState: {errors}} = useForm<LoginForm>({
+    const {register, handleSubmit, watch, setValue, formState: {errors}} = useForm<LoginForm>({
         defaultValues: {
             email: "",
             password: "",
@@ -41,9 +41,7 @@ const LoginPage = () => {
         setError(null);
 
         try {
-            console.log("Calling login API...");
             const response = await useAuthService.login(data);
-            console.log("Login API response:", response);
 
             if (response && response.accessToken) {
                 const userData = await setToken(response.accessToken);
@@ -180,7 +178,14 @@ const LoginPage = () => {
                             </div>
 
                             <div className="flex items-center space-x-2">
-                                <Checkbox id="rememberMe" {...register("rememberMe")} />
+                                <Checkbox id="rememberMe"
+                                          checked={watch("rememberMe")}
+                                          onCheckedChange={(checked) => {
+                                              setValue("rememberMe", checked == true, {
+                                                  shouldValidate: true,
+                                              });
+                                          }}
+                                />
                                 <Label htmlFor="rememberMe" className="text-sm font-normal">
                                     Remember me for 30 days
                                 </Label>
@@ -204,7 +209,7 @@ const LoginPage = () => {
                                     </div>
                                 </div>
 
-                                <div className="mt-6 grid grid-cols-2 gap-4">
+                                <div className="mt-6 grid grid-cols-3 gap-4">
                                     <Button
                                         variant="outline"
                                         className="border-gray-700 bg-[#333333] hover:bg-gray-700 hover:cursor-pointer"
@@ -219,6 +224,15 @@ const LoginPage = () => {
                                         <Google className="mr-2 h-4 w-4"/>
 
                                         Google
+                                    </Button>
+
+                                    <Button
+                                        variant="outline"
+                                        className="border-gray-700 bg-[#333333] hover:bg-gray-700 hover:cursor-pointer"
+                                    >
+                                        <LinkedIn className="mr-2 h-4 w-4"/>
+
+                                        LinkedIn
                                     </Button>
                                 </div>
                             </div>
