@@ -45,6 +45,7 @@ const LoginPage = () => {
 
             if (response && response.accessToken) {
                 const userData = await setToken(response.accessToken);
+                console.log(userData);
 
                 if (userData) {
                     navigate("/dashboard");

@@ -5,8 +5,8 @@ import {Archive, Award, Send, Users, XCircle} from "lucide-react";
 
 export interface StatusHistoryEntry {
     status: Status;
-    timestamp: string;
-    note?: string;
+    createdAt: string;
+    notes?: string;
 }
 
 // Extended Job Application interface with additional fields
@@ -18,6 +18,14 @@ export interface JobApplication {
     statusHistory: StatusHistoryEntry[];
     website?: string;
 }
+export interface PaginatedApplications {
+    data: JobApplication[];
+    total: number;
+    totalPages: number;
+    page: number;
+    size: number;
+    pageSize: number;
+  }
 
 export type Status = "Applied" | "Interview" | "Offer" | "Rejected" | "Withdrawn";
 

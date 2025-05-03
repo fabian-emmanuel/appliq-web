@@ -21,10 +21,11 @@ export function ApplicationCard({application, onRequestStatusChange, onEdit, onD
     const [isHovered, setIsHovered] = useState(false);
 
     // Get the most recent status update timestamp
-    const lastUpdateTimestamp = application.statusHistory[application.statusHistory.length - 1]?.timestamp;
+    const lastUpdateTimestamp = application.statusHistory[application.statusHistory.length - 1]?.createdAt;
 
     // Get current status details
     const currentStatusDetails = statusDetailsMap[application.status];
+    console.log(currentStatusDetails)
 
     return (
         <Card
@@ -36,7 +37,8 @@ export function ApplicationCard({application, onRequestStatusChange, onEdit, onD
                 <div className="flex items-center justify-between">
                     {/* Status Badge */}
                     <Badge variant="outline"
-                           className={`border-0 ${currentStatusDetails.colorClass} text-white px-2.5 py-1 inline-flex items-center gap-1`}>
+                           className={`border-0 ${currentStatusDetails.colorClass} text-white px-2.5 py-1 inline-flex items-center gap-1`}
+                           >
                         <currentStatusDetails.Icon className="mr-1 h-3 w-3"/>
                         {application.status}
                     </Badge>
@@ -106,8 +108,7 @@ export function ApplicationCard({application, onRequestStatusChange, onEdit, onD
                                 {/* Timeline indicator */}
                                 <div className="flex flex-col items-center">
                                     <div className="relative flex items-center justify-center h-5 w-5">
-                                        <div
-                                            className={`w-3 h-3 rounded-full ${statusDetailsMap[status.status].colorClass} ring-2 ring-white`}></div>
+                                        <div className={`w-3 h-3 rounded-full ${statusDetailsMap[status.status].colorClass} ring-2 ring-white`}></div>
                                     </div>
 
                                     {/* Vertical connector line */}
@@ -121,11 +122,11 @@ export function ApplicationCard({application, onRequestStatusChange, onEdit, onD
                                     <div className="flex justify-between items-baseline">
                                         <span className="font-medium text-sm">{status.status}</span>
                                         <time className="text-xs text-gray-400">
-                                            {formatTimelineDate(status.timestamp)}
+                                            {formatTimelineDate(status.createdAt)}
                                         </time>
                                     </div>
-                                    {status.note && (
-                                        <p className="text-xs mt-0.5 text-gray-500">{status.note}</p>
+                                    {status.notes && (
+                                        <p className="text-xs mt-0.5 text-gray-500">{status.notes}</p>
                                     )}
                                 </div>
                             </li>

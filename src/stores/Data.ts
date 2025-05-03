@@ -9,8 +9,8 @@ export const initialApplications: JobApplication[] = [
         status: "Interview",
         website: "https://techcorp.example.com",
         statusHistory: [
-            { status: "Applied", timestamp: "2025-04-10T10:00:00Z", note: "Submitted resume and portfolio" },
-            { status: "Interview", timestamp: "2025-04-15T14:30:00Z", note: "Technical Screen scheduled with team lead" } // Stage info in note
+            { status: "Applied", createdAt: "2025-04-10T10:00:00Z", notes: "Submitted resume and portfolio" },
+            { status: "Interview", createdAt: "2025-04-15T14:30:00Z", notes: "Technical Screen scheduled with team lead" } // Stage info in note
         ]
     },
     {
@@ -20,7 +20,7 @@ export const initialApplications: JobApplication[] = [
         status: "Applied",
         website: "https://innovatesolutions.example.com",
         statusHistory: [
-            { status: "Applied", timestamp: "2025-04-10T09:00:00Z", note: "Applied via company website" }
+            { status: "Applied", createdAt: "2025-04-10T09:00:00Z", notes: "Applied via company website" }
         ]
     },
     {
@@ -30,9 +30,9 @@ export const initialApplications: JobApplication[] = [
         status: "Rejected",
         website: "https://business-inc.example.com",
         statusHistory: [
-            { status: "Applied", timestamp: "2025-03-25T11:00:00Z" },
-            { status: "Interview", timestamp: "2025-03-30T16:00:00Z", note: "First round with HR" },
-            { status: "Rejected", timestamp: "2025-04-01T10:00:00Z", note: "Position filled internally" }
+            { status: "Applied", createdAt: "2025-03-25T11:00:00Z" },
+            { status: "Interview", createdAt: "2025-03-30T16:00:00Z", notes: "First round with HR" },
+            { status: "Rejected", createdAt: "2025-04-01T10:00:00Z", notes: "Position filled internally" }
         ]
     },
     {
@@ -42,9 +42,9 @@ export const initialApplications: JobApplication[] = [
         status: "Offer",
         website: "https://datadynamics.example.com",
         statusHistory: [
-            { status: "Applied", timestamp: "2025-03-15T08:00:00Z" },
-            { status: "Interview", timestamp: "2025-03-20T13:00:00Z", note: "Technical assessment and team interview" },
-            { status: "Offer", timestamp: "2025-03-28T17:00:00Z", note: "$95K annual, remote with quarterly on-site" }
+            { status: "Applied", createdAt: "2025-03-15T08:00:00Z" },
+            { status: "Interview", createdAt: "2025-03-20T13:00:00Z", notes: "Technical assessment and team interview" },
+            { status: "Offer", createdAt: "2025-03-28T17:00:00Z", notes: "$95K annual, remote with quarterly on-site" }
         ]
     },
     {
@@ -53,7 +53,7 @@ export const initialApplications: JobApplication[] = [
         position: "UI/UX Designer",
         status: "Applied",
         statusHistory: [
-            { status: "Applied", timestamp: "2025-04-18T12:00:00Z", note: "Submitted portfolio and case studies" }
+            { status: "Applied", createdAt: "2025-04-18T12:00:00Z", notes: "Submitted portfolio and case studies" }
         ]
     },
     {
@@ -63,9 +63,9 @@ export const initialApplications: JobApplication[] = [
         status: "Withdrawn",
         website: "https://techcorp.example.com",
         statusHistory: [
-            { status: "Applied", timestamp: "2025-02-20T09:00:00Z" },
-            { status: "Interview", timestamp: "2025-03-01T11:00:00Z", note: "Good conversation, but position requires relocation" },
-            { status: "Withdrawn", timestamp: "2025-03-05T15:00:00Z", note: "Not interested in relocation at this time" }
+            { status: "Applied", createdAt: "2025-02-20T09:00:00Z" },
+            { status: "Interview", createdAt: "2025-03-01T11:00:00Z", notes: "Good conversation, but position requires relocation" },
+            { status: "Withdrawn", createdAt: "2025-03-05T15:00:00Z", notes: "Not interested in relocation at this time" }
         ]
     },
     {
@@ -75,8 +75,8 @@ export const initialApplications: JobApplication[] = [
         status: "Interview", // Keep main status
         website: "https://innovatesolutions.example.com",
         statusHistory: [
-            { status: "Applied", timestamp: "2025-04-19T10:00:00Z" },
-            { status: "Interview", timestamp: "2025-04-20T14:30:00Z", note: "Initial Screen scheduled" } // Stage info in note
+            { status: "Applied", createdAt: "2025-04-19T10:00:00Z" },
+            { status: "Interview", createdAt: "2025-04-20T14:30:00Z", notes: "Initial Screen scheduled" } // Stage info in note
         ]
     },
     {
@@ -84,7 +84,7 @@ export const initialApplications: JobApplication[] = [
         company: "Creative Hub",
         position: "Graphic Designer",
         status: "Applied",
-        statusHistory: [ { status: "Applied", timestamp: "2025-04-21T09:00:00Z" } ]
+        statusHistory: [ { status: "Applied", createdAt: "2025-04-21T09:00:00Z" } ]
     },
     {
         id: "9",
@@ -93,8 +93,8 @@ export const initialApplications: JobApplication[] = [
         status: "Interview", // Keep main status
         website: "https://cloudsvc.example.com",
         statusHistory: [
-            { status: "Applied", timestamp: "2025-04-12T11:00:00Z" },
-            { status: "Interview", timestamp: "2025-04-18T10:30:00Z", note: "Technical Challenge received" } // Stage info in note
+            { status: "Applied", createdAt: "2025-04-12T11:00:00Z" },
+            { status: "Interview", createdAt: "2025-04-18T10:30:00Z", notes: "Technical Challenge received" } // Stage info in note
         ]
     },
     {
@@ -103,8 +103,8 @@ export const initialApplications: JobApplication[] = [
         position: "Social Media Manager",
         status: "Rejected",
         statusHistory: [
-            { status: "Applied", timestamp: "2025-04-05T15:00:00Z" },
-            { status: "Rejected", timestamp: "2025-04-10T09:00:00Z", note: "Went with another candidate" }
+            { status: "Applied", createdAt: "2025-04-05T15:00:00Z" },
+            { status: "Rejected", createdAt: "2025-04-10T09:00:00Z", notes: "Went with another candidate" }
         ]
     },
     {
@@ -112,7 +112,7 @@ export const initialApplications: JobApplication[] = [
         company: "Finance Solutions",
         position: "Financial Analyst",
         status: "Applied",
-        statusHistory: [ { status: "Applied", timestamp: "2025-04-20T16:00:00Z" } ]
+        statusHistory: [ { status: "Applied", createdAt: "2025-04-20T16:00:00Z" } ]
     },
     {
         id: "12",
@@ -120,6 +120,6 @@ export const initialApplications: JobApplication[] = [
         position: "QA Tester",
         status: "Applied",
         website: "https://techcorp.example.com",
-        statusHistory: [ { status: "Applied", timestamp: "2025-04-21T11:30:00Z" } ]
+        statusHistory: [ { status: "Applied", createdAt: "2025-04-21T11:30:00Z" } ]
     },
 ];

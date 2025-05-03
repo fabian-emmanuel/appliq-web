@@ -28,15 +28,21 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { initialApplications } from "@/stores/Data";
+// import { initialApplications } from "@/stores/Data";
 import { ApplicationCard } from "components/ApplicationCard.tsx";
+import { useEffect } from "react";
+import axios from "axios";
+import {
+  useApplicationService,
+  useStatusService,
+} from "@/services/application-service";
 
 // --- Component ---
 export default function ApplicationsPage() {
-  const [applications, setApplications] =
-    useState<JobApplication[]>(initialApplications);
+  const [applications, setApplications] = useState<JobApplication[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<Status | "all">("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [sortConfig, setSortConfig] = useState<{
     key: keyof JobApplication | "lastUpdated";
     direction: "ascending" | "descending";
@@ -45,6 +51,8 @@ export default function ApplicationsPage() {
 
   // --- Pagination State ---
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const itemsPerPage = 9; // Show 9 cards per page
 
   // --- Modal State ---
@@ -62,57 +70,38 @@ export default function ApplicationsPage() {
     position: "",
   });
 
-  // --- Filtering and Sorting ---
-  const filteredApplications = useMemo(() => {
-    let filtered = applications.filter((app) => {
-      const term = searchTerm.toLowerCase();
-      const matchesSearch =
-        app.company.toLowerCase().includes(term) ||
-        app.position.toLowerCase().includes(term);
-      const matchesStatus =
-        statusFilter === "all" || app.status === statusFilter;
-      return matchesSearch && matchesStatus;
-    });
-
-    // Sorting
-    if (sortConfig !== null) {
-      // Helper to get sortable value
-      const getSortValue = (
-        app: JobApplication,
-        key: keyof JobApplication | "lastUpdated"
-      ) => {
-        if (key === "lastUpdated") {
-          return (
-            app.statusHistory[app.statusHistory.length - 1]?.timestamp || ""
-          );
-        }
-        return app[key as keyof JobApplication];
-      };
-
-      filtered.sort((a, b) => {
-        const aValue = getSortValue(a, sortConfig.key);
-        const bValue = getSortValue(b, sortConfig.key);
-
-        if (aValue < bValue) {
-          return sortConfig.direction === "ascending" ? -1 : 1;
-        }
-        if (aValue > bValue) {
-          return sortConfig.direction === "ascending" ? 1 : -1;
-        }
-        return 0;
-      });
+  // get all applications
+  useEffect(() => {
+    async function getApplications() {
+      try {
+        setIsLoading(true);
+        const result = await useApplicationService.fetchApplications(currentPage, itemsPerPage, searchTerm, statusFilter);
+       console.log(result);
+        setApplications(result.data);
+        setTotalPages(result.totalPages);
+        setTotalCount(result.total);
+      } catch (error) {
+        console.error("Failed to get Application data:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
+    getApplications();
+  }, [currentPage, searchTerm, statusFilter]);
 
-    return filtered;
-  }, [applications, searchTerm, statusFilter, sortConfig]);
+  //  get all status filters
+  useEffect(() => {
+    async function getStatus() {
+      try {
+        const result = await useStatusService.fetchStatusFilter();
+        setStatusFilter(result);
+      } catch (error) {
+        console.error("Failed to get status data:", error);
+      }
+    }
+    getStatus();
+  }, [useStatusService]);
 
-  // --- Pagination Logic ---
-  const totalPages = Math.ceil(filteredApplications.length / itemsPerPage);
-  const paginatedApplications = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    return filteredApplications.slice(startIndex, endIndex);
-  }, [filteredApplications, currentPage, itemsPerPage]);
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -141,7 +130,7 @@ export default function ApplicationsPage() {
         if (app.id === appId) {
           const newHistoryEntry = {
             status: newStatus,
-            timestamp: new Date().toISOString(), // Use current time
+            createdAt: new Date().toISOString(), // Use current time
             note: "", // Empty note initially
           };
           // Avoid adding duplicate consecutive statuses
@@ -191,8 +180,8 @@ export default function ApplicationsPage() {
           if (app.id === appId) {
             const newHistoryEntry: StatusHistoryEntry = {
               status: newStatus,
-              timestamp: new Date().toISOString(),
-              note: note || "", // Save the note, which may contain stage info
+              createdAt: new Date().toISOString(),
+              notes: note || "", // Save the note, which may contain stage info
             };
 
             // Avoid adding duplicate consecutive statuses (based on status alone now)
@@ -274,7 +263,7 @@ export default function ApplicationsPage() {
           />
           <Select
             value={statusFilter}
-            onValueChange={(value) => setStatusFilter(value as Status | "all")}
+            onValueChange={(value) => setStatusFilter(value)}
           >
             <SelectTrigger className="w-full md:w-[180px]">
               <SelectValue placeholder="Filter by status..." />
@@ -296,8 +285,8 @@ export default function ApplicationsPage() {
           style={{ scrollbarWidth: "none" }}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {paginatedApplications.length > 0 ? (
-              paginatedApplications.map((app) => (
+            {totalCount > 0 ? (
+              applications.map((app) => (
                 <ApplicationCard
                   key={app.id}
                   application={app}
