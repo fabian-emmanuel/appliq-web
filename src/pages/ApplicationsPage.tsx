@@ -32,7 +32,7 @@ export default function ApplicationsPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [totalCount, setTotalCount] = useState(0);
-    const itemsPerPage = 16; // Show 16 cards per page
+    const itemsPerPage = 9; // Show 16 cards per page
 
     // --- Modal State ---
     const [modalState, setModalState] = useState<{
@@ -277,7 +277,7 @@ export default function ApplicationsPage() {
                         </div>
                     )}
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
                         {totalCount > 0 ? (
                             applications.map((app) => (
                                 <ApplicationCard

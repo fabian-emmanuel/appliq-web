@@ -1,12 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {DashboardLayout} from "components/DashboardLayout";
 import {Card, CardHeader, CardTitle, CardDescription, CardContent} from "@/components/ui/card";
 import {useAuthContext} from '@/contexts/AuthContext';
+import { useApplicationService } from "@/services/application-service";
 
 
 export default function DashboardPage() {
 
     const {user} = useAuthContext();
+    console.log("Dashboard user object:", user);
+    const [activeApplicationCount, setActiveApplicationCount] = useState<number>(0);
+    const [interviewCount, setInterviewCount] = useState<number>(0);
+  const [offerCount, setOfferCount] = useState<number>(0);
+
+    useEffect(() => {
+        const fetchApplicationStatus = async () => {
+            try {
+                const applicationsData = await useApplicationService.fetchApplications(1, 100, '', 'all');
+      
+                const apps = applicationsData.applications || [];
+                // const applications = data.items;
+
+                const applied = apps.filter(app => app.status === "Applied").length;
+                const interviews = apps.filter(app => app.status === "Interview").length;
+                const offers = apps.filter(app => app.status === "OfferAwarded").length;
+
+                setActiveApplicationCount(applied);
+                setInterviewCount(interviews);
+                setOfferCount(offers);
+
+                // const activeApps = data.items.filter(app => app.status === "active");
+                // setActiveApplication(activeApps.length);
+            } catch(error) {
+                console.error("Failed to fetch active applications:", error);
+            }
+        }; fetchApplicationStatus();
+    }, []);
+
     return (
         <DashboardLayout>
             <div className="space-y-6">
@@ -32,7 +62,7 @@ export default function DashboardPage() {
                             </svg>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">+15</div>
+                            <div className="text-2xl font-bold">+{activeApplicationCount}</div>
                             <p className="text-xs text-muted-foreground">
                                 +2 from last week
                             </p>
@@ -52,7 +82,7 @@ export default function DashboardPage() {
                             </svg>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">+3</div>
+                            <div className="text-2xl font-bold">+{interviewCount}</div>
                             <p className="text-xs text-muted-foreground">1 upcoming this week</p>
                         </CardContent>
                     </Card>
@@ -67,7 +97,7 @@ export default function DashboardPage() {
                             </svg>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">+1</div>
+                            <div className="text-2xl font-bold">+{offerCount}</div>
                             <p className="text-xs text-muted-foreground">Pending decision</p>
                         </CardContent>
                     </Card>

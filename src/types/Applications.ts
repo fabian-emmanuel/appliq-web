@@ -45,6 +45,7 @@ export interface JobApplication {
 }
 
 export interface PaginatedApplications {
+    items: any;
     applications: JobApplication[];
     pagination: Pagination;
 }
