@@ -56,9 +56,9 @@ export interface Pagination {
     size: number;
 }
 
-export type Status = "Applied" | "Interview" | "OfferAwarded" | "Rejected" | "Withdrawn";
+export type Status = "Applied" | "Test" | "Interview" | "OfferAwarded" | "Rejected" | "Withdrawn";
 
-export const statuses: Status[] = ["Applied", "Interview", "OfferAwarded", "Rejected", "Withdrawn"];
+export const statuses: Status[] = ["Applied", "Test", "Interview", "OfferAwarded", "Rejected", "Withdrawn"];
 
 export interface StatusDetails {
     colorClass: string;
@@ -76,6 +76,13 @@ export const statusDetailsMap: Record<Status, StatusDetails> = {
         progress: 25,
         Icon: Send
     },
+    Test: {
+        colorClass: "bg-amber-500",
+        bgClass: "bg-amber-100",
+        textClass: "text-amber-700",
+        progress: 35,
+        Icon: Send
+    },
     Interview: {
         colorClass: "bg-purple-500",
         bgClass: "bg-purple-100",
@@ -87,7 +94,7 @@ export const statusDetailsMap: Record<Status, StatusDetails> = {
         colorClass: "bg-green-500",
         bgClass: "bg-green-100",
         textClass: "text-green-700",
-        progress: 75,
+        progress: 100,
         Icon: Award
     },
     Rejected: {
