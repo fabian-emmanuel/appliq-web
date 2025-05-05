@@ -12,9 +12,9 @@ import {getColor, getInitials} from "utils/StringUtil.ts";
 // Props for the ApplicationCard component
 interface ApplicationCardProps {
     application: JobApplication;
-    onRequestStatusChange: (appId: string, newStatus: Status) => void;
-    onEdit?: (appId: string) => void;
-    onDelete?: (appId: string) => void;
+    onRequestStatusChange: ((appId: number, newStatus: Status) => void) | null;
+    onEdit?: (appId: number) => void;
+    onDelete?: (appId: number) => void;
 }
 
 export function ApplicationCard({application, onRequestStatusChange, onEdit, onDelete}: ApplicationCardProps) {
@@ -148,7 +148,7 @@ export function ApplicationCard({application, onRequestStatusChange, onEdit, onD
                         {statuses.map((statusOption) => (
                             <DropdownMenuItem
                                 key={statusOption}
-                                onClick={() => onRequestStatusChange(application.id, statusOption)}
+                                onClick={() => onRequestStatusChange && onRequestStatusChange(application.id, statusOption)}
                                 className={`text-xs cursor-pointer ${statusDetailsMap[statusOption].textClass}`}
                             >
                 <span className="flex items-center gap-2">

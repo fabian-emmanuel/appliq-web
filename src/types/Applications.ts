@@ -3,33 +3,62 @@
 import React from "react";
 import {Archive, Award, Send, Users, XCircle} from "lucide-react";
 
-export interface StatusHistoryEntry {
+export interface StatusHistory {
+    id: number;
+    applicationId: number;
+    createdBy: number;
     status: Status;
     createdAt: string;
     notes?: string;
+    testType?: string;
+    interviewType?: number;
 }
 
-// Extended Job Application interface with additional fields
+export interface StatusUpdate {
+    applicationId: number
+    status: string
+    testType?: string
+    interviewType?: string
+    notes?: string
+}
+
+
+export interface ApplicationFilterParams {
+    search?: string;
+    status?: Status;
+    from?: string;
+    to?: string;
+    page?: number;
+    size?: number;
+}
+
 export interface JobApplication {
-    id: string;
+    id: number;
     company: string;
     position: string;
     status: Status;
-    statusHistory: StatusHistoryEntry[];
+    statusHistory: StatusHistory[];
     website?: string;
+    applicationType?: string;
+    createdAt: number;
+    createdBy: number;
 }
+
 export interface PaginatedApplications {
-    data: JobApplication[];
+    applications: JobApplication[];
+    pagination: Pagination;
+}
+
+export interface Pagination {
     total: number;
     totalPages: number;
     page: number;
     size: number;
-    pageSize: number;
-  }
+}
 
-export type Status = "Applied" | "Interview" | "Offer" | "Rejected" | "Withdrawn";
+export type Status = "Applied" | "Interview" | "OfferAwarded" | "Rejected" | "Withdrawn";
 
-export const statuses: Status[] = ["Applied", "Interview", "Offer", "Rejected", "Withdrawn"];
+export const statuses: Status[] = ["Applied", "Interview", "OfferAwarded", "Rejected", "Withdrawn"];
 
 export interface StatusDetails {
     colorClass: string;
@@ -54,7 +83,7 @@ export const statusDetailsMap: Record<Status, StatusDetails> = {
         progress: 50,
         Icon: Users
     },
-    Offer: {
+    OfferAwarded: {
         colorClass: "bg-green-500",
         bgClass: "bg-green-100",
         textClass: "text-green-700",

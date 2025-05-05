@@ -1,6 +1,6 @@
 // contexts/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { UserService } from '@/services/user-service';
+import { userUserService } from '@/services/user-service';
 import type { User } from '@/types/User';
 import { apiClient, setAuthToken } from "@/brain/api-client";
 import {AUTH_TOKEN_KEY} from "@/constants/apis.ts";
@@ -27,7 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         setIsLoading(true);
         try {
-            const userData = await UserService.fetchUserInfo();
+            const userData = await userUserService.fetchUserInfo();
             setUser(userData);
         } catch (error) {
             console.error('Failed to load user info:', error);
@@ -60,7 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Load user data if we have a token
         if (newToken) {
             try {
-                const userData = await UserService.fetchUserInfo();
+                const userData = await userUserService.fetchUserInfo();
                 setUser(userData);
                 return userData;
             } catch (error) {

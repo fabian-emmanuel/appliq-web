@@ -2,7 +2,7 @@ import type {User} from '@/types/User.ts'
 import {apiClient} from "@/brain/api-client.ts";
 
 
-export const UserService = {
+export const userUserService = {
     async fetchUserInfo(): Promise<User> {
         try {
             const response = await apiClient.request<{
