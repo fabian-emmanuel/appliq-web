@@ -4,11 +4,14 @@ import {ThemeProvider} from "./internal-components/ThemeProvider";
 import {OuterErrorBoundary} from "./internal-components/OuterErrorBoundary.tsx";
 import router from "./router";
 import {AuthProvider} from "./contexts/AuthContext.tsx";
+import { Toaster } from "sonner";
+
 
 export const AppWrapper = () => {
     return (
         <OuterErrorBoundary>
             <ThemeProvider defaultTheme={DEFAULT_THEME}>
+                <Toaster position="top-center" />
                 <AuthProvider>
                     <RouterProvider router={router}/>
                 </AuthProvider>

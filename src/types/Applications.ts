@@ -3,25 +3,63 @@
 import React from "react";
 import {Archive, Award, Send, Users, XCircle} from "lucide-react";
 
-export interface StatusHistoryEntry {
+export interface StatusHistory {
+    id: number;
+    applicationId: number;
+    createdBy: number;
     status: Status;
-    timestamp: string;
-    note?: string;
+    createdAt: string;
+    notes?: string;
+    testType?: string;
+    interviewType?: number;
 }
 
-// Extended Job Application interface with additional fields
+export interface StatusUpdate {
+    applicationId: number
+    status: string
+    testType?: string
+    interviewType?: string
+    notes?: string
+}
+
+
+export interface ApplicationFilterParams {
+    search?: string;
+    status?: Status;
+    from?: string;
+    to?: string;
+    page?: number;
+    size?: number;
+}
+
 export interface JobApplication {
-    id: string;
+    id: number;
     company: string;
     position: string;
     status: Status;
-    statusHistory: StatusHistoryEntry[];
+    statusHistory: StatusHistory[];
     website?: string;
+    applicationType?: string;
+    createdAt: number;
+    createdBy: number;
 }
 
-export type Status = "Applied" | "Interview" | "Offer" | "Rejected" | "Withdrawn";
+export interface PaginatedApplications {
+    items: any;
+    applications: JobApplication[];
+    pagination: Pagination;
+}
 
-export const statuses: Status[] = ["Applied", "Interview", "Offer", "Rejected", "Withdrawn"];
+export interface Pagination {
+    total: number;
+    totalPages: number;
+    page: number;
+    size: number;
+}
+
+export type Status = "Applied" | "Test" | "Interview" | "OfferAwarded" | "Rejected" | "Withdrawn";
+
+export const statuses: Status[] = ["Applied", "Test", "Interview", "OfferAwarded", "Rejected", "Withdrawn"];
 
 export interface StatusDetails {
     colorClass: string;
@@ -39,6 +77,13 @@ export const statusDetailsMap: Record<Status, StatusDetails> = {
         progress: 25,
         Icon: Send
     },
+    Test: {
+        colorClass: "bg-amber-500",
+        bgClass: "bg-amber-100",
+        textClass: "text-amber-700",
+        progress: 35,
+        Icon: Send
+    },
     Interview: {
         colorClass: "bg-purple-500",
         bgClass: "bg-purple-100",
@@ -46,11 +91,11 @@ export const statusDetailsMap: Record<Status, StatusDetails> = {
         progress: 50,
         Icon: Users
     },
-    Offer: {
+    OfferAwarded: {
         colorClass: "bg-green-500",
         bgClass: "bg-green-100",
         textClass: "text-green-700",
-        progress: 75,
+        progress: 100,
         Icon: Award
     },
     Rejected: {
